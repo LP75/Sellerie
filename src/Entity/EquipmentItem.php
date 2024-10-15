@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EquipmentItemRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Enum\EquipmentState;
 use Doctrine\DBAL\Types\Types;
@@ -27,6 +29,17 @@ class EquipmentItem
 
     #[ORM\Column(type: Types::STRING, enumType: EquipmentState::class)]
     private ?EquipmentState $state = null;
+
+    /**
+     * @var Collection<int, Repair>
+     */
+    #[ORM\OneToMany(targetEntity: Repair::class, mappedBy: 'EquipmentItem')]
+    private Collection $repairs;
+
+    public function __construct()
+    {
+        $this->repairs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -77,6 +90,36 @@ class EquipmentItem
     public function setStatus(EquipmentState $state): static
     {
         $this->state = $state;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Repair>
+     */
+    public function getRepairs(): Collection
+    {
+        return $this->repairs;
+    }
+
+    public function addRepair(Repair $repair): static
+    {
+        if (!$this->repairs->contains($repair)) {
+            $this->repairs->add($repair);
+            $repair->setEquipmentItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRepair(Repair $repair): static
+    {
+        if ($this->repairs->removeElement($repair)) {
+            // set the owning side to null (unless already changed)
+            if ($repair->getEquipmentItem() === $this) {
+                $repair->setEquipmentItem(null);
+            }
+        }
 
         return $this;
     }
