@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EquipmentTypeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EquipmentTypeRepository::class)]
@@ -32,6 +34,17 @@ class EquipmentType
     #[ORM\OneToOne(inversedBy: 'equipmentType', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Stock $stock_id = null;
+
+    /**
+     * @var Collection<int, EquipmentItem>
+     */
+    #[ORM\OneToMany(targetEntity: EquipmentItem::class, mappedBy: 'equipmentType_id')]
+    private Collection $equipmentItems;
+
+    public function __construct()
+    {
+        $this->equipmentItems = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -106,6 +119,36 @@ class EquipmentType
     public function setStockId(Stock $stock_id): static
     {
         $this->stock_id = $stock_id;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EquipmentItem>
+     */
+    public function getEquipmentItems(): Collection
+    {
+        return $this->equipmentItems;
+    }
+
+    public function addEquipmentItem(EquipmentItem $equipmentItem): static
+    {
+        if (!$this->equipmentItems->contains($equipmentItem)) {
+            $this->equipmentItems->add($equipmentItem);
+            $equipmentItem->setEquipmentTypeId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEquipmentItem(EquipmentItem $equipmentItem): static
+    {
+        if ($this->equipmentItems->removeElement($equipmentItem)) {
+            // set the owning side to null (unless already changed)
+            if ($equipmentItem->getEquipmentTypeId() === $this) {
+                $equipmentItem->setEquipmentTypeId(null);
+            }
+        }
 
         return $this;
     }
