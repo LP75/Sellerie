@@ -21,9 +21,6 @@ class EquipmentItem
     #[ORM\JoinColumn(nullable: false)]
     private ?EquipmentType $equipmentType = null;
 
-    #[ORM\Column]
-    private ?bool $isLoaned = null;
-
     #[ORM\ManyToOne(inversedBy: 'equipmentItems')]
     private ?Location $location = null;
 
@@ -48,9 +45,6 @@ class EquipmentItem
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'equipmentItem')]
     private Collection $notifications;
 
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
-
     public function __construct()
     {
         $this->repairs = new ArrayCollection();
@@ -71,18 +65,6 @@ class EquipmentItem
     public function setEquipmentType(?EquipmentType $equipmentType): static
     {
         $this->equipmentType = $equipmentType;
-
-        return $this;
-    }
-
-    public function isLoaned(): ?bool
-    {
-        return $this->isLoaned;
-    }
-
-    public function setLoaned(bool $isLoaned): static
-    {
-        $this->isLoaned = $isLoaned;
 
         return $this;
     }
@@ -197,18 +179,6 @@ class EquipmentItem
                 $notification->setEquipmentItem(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = $name;
 
         return $this;
     }

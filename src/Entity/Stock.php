@@ -14,10 +14,7 @@ class Stock
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?int $total_quantity = null;
-
-    #[ORM\Column]
-    private ?int $available_quantity = null;
+    private ?int $quantity = null;
 
     #[ORM\Column]
     private ?int $minimum_stock_level = null;
@@ -30,26 +27,14 @@ class Stock
         return $this->id;
     }
 
-    public function getTotalQuantity(): ?int
+    public function getQuantity(): ?int
     {
-        return $this->total_quantity;
+        return $this->quantity;
     }
 
-    public function setTotalQuantity(int $total_quantity): static
+    public function setQuantity(int $quantity): static
     {
-        $this->total_quantity = $total_quantity;
-
-        return $this;
-    }
-
-    public function getAvailableQuantity(): ?int
-    {
-        return $this->available_quantity;
-    }
-
-    public function setAvailableQuantity(int $available_quantity): static
-    {
-        $this->available_quantity = $available_quantity;
+        $this->quantity = $quantity;
 
         return $this;
     }
