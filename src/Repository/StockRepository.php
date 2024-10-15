@@ -2,39 +2,39 @@
 
 namespace App\Repository;
 
-use App\Entity\EquipmentType;
+use App\Entity\Stock;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<EquipmentType>
+ * @extends ServiceEntityRepository<Stock>
  */
-class EquipmentTypeRepository extends ServiceEntityRepository
+class StockRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, EquipmentType::class);
+        parent::__construct($registry, Stock::class);
     }
 
     //    /**
-    //     * @return EquipmentType[] Returns an array of EquipmentType objects
+    //     * @return Stock[] Returns an array of Stock objects
     //     */
     //    public function findByExampleField($value): array
     //    {
-    //        return $this->createQueryBuilder('e')
-    //            ->andWhere('e.exampleField = :val')
+    //        return $this->createQueryBuilder('s')
+    //            ->andWhere('s.exampleField = :val')
     //            ->setParameter('val', $value)
-    //            ->orderBy('e.id', 'ASC')
+    //            ->orderBy('s.id', 'ASC')
     //            ->setMaxResults(10)
     //            ->getQuery()
     //            ->getResult()
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?EquipmentType
+    //    public function findOneBySomeField($value): ?Stock
     //    {
-    //        return $this->createQueryBuilder('e')
-    //            ->andWhere('e.exampleField = :val')
+    //        return $this->createQueryBuilder('s')
+    //            ->andWhere('s.exampleField = :val')
     //            ->setParameter('val', $value)
     //            ->getQuery()
     //            ->getOneOrNullResult()
