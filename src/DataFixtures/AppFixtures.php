@@ -107,7 +107,7 @@ class AppFixtures extends Fixture
                 //Création du stock pour ce type d'équipement
                 $stock = new Stock();
                 $stock
-                    ->setQuantity($faker->numberBetween(1, 100))
+                    ->setQuantity($faker->numberBetween(1, 10))
                     ->setMinimumStockLevel($faker->numberBetween(1, 10));
                 $manager->persist($stock);
 

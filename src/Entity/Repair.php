@@ -20,8 +20,6 @@ class Repair
     #[ORM\JoinColumn(nullable: false)]
     private ?EquipmentItem $EquipmentItem = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $description = null;
 
     #[ORM\Column]
     private ?float $cost = null;
@@ -56,18 +54,6 @@ class Repair
     public function setEquipmentItem(?EquipmentItem $EquipmentItem): static
     {
         $this->EquipmentItem = $EquipmentItem;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): static
-    {
-        $this->description = $description;
 
         return $this;
     }
