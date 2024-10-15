@@ -32,6 +32,10 @@ class Loan
     #[ORM\OneToMany(targetEntity: Movement::class, mappedBy: 'loan')]
     private Collection $movements;
 
+    #[ORM\ManyToOne(inversedBy: 'loans')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?EquipmentItem $EquipmentItem = null;
+
     public function __construct()
     {
         $this->movements = new ArrayCollection();
@@ -104,6 +108,18 @@ class Loan
                 $movement->setLoan(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getEquipmentItem(): ?EquipmentItem
+    {
+        return $this->EquipmentItem;
+    }
+
+    public function setEquipmentItem(?EquipmentItem $EquipmentItem): static
+    {
+        $this->EquipmentItem = $EquipmentItem;
 
         return $this;
     }

@@ -36,9 +36,16 @@ class EquipmentItem
     #[ORM\OneToMany(targetEntity: Repair::class, mappedBy: 'EquipmentItem')]
     private Collection $repairs;
 
+    /**
+     * @var Collection<int, Loan>
+     */
+    #[ORM\OneToMany(targetEntity: Loan::class, mappedBy: 'EquipmentItem')]
+    private Collection $loans;
+
     public function __construct()
     {
         $this->repairs = new ArrayCollection();
+        $this->loans = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -118,6 +125,36 @@ class EquipmentItem
             // set the owning side to null (unless already changed)
             if ($repair->getEquipmentItem() === $this) {
                 $repair->setEquipmentItem(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Loan>
+     */
+    public function getLoans(): Collection
+    {
+        return $this->loans;
+    }
+
+    public function addLoan(Loan $loan): static
+    {
+        if (!$this->loans->contains($loan)) {
+            $this->loans->add($loan);
+            $loan->setEquipmentItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLoan(Loan $loan): static
+    {
+        if ($this->loans->removeElement($loan)) {
+            // set the owning side to null (unless already changed)
+            if ($loan->getEquipmentItem() === $this) {
+                $loan->setEquipmentItem(null);
             }
         }
 

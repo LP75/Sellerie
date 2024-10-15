@@ -23,6 +23,9 @@ class Movement
     #[ORM\ManyToOne(inversedBy: 'movements')]
     private ?Loan $loan = null;
 
+    #[ORM\ManyToOne(inversedBy: 'movements')]
+    private ?Repair $repair = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +63,18 @@ class Movement
     public function setLoan(?Loan $loan): static
     {
         $this->loan = $loan;
+
+        return $this;
+    }
+
+    public function getRepair(): ?Repair
+    {
+        return $this->repair;
+    }
+
+    public function setRepair(?Repair $repair): static
+    {
+        $this->repair = $repair;
 
         return $this;
     }
