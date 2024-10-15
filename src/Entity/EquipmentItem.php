@@ -48,6 +48,9 @@ class EquipmentItem
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'equipmentItem')]
     private Collection $notifications;
 
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
     public function __construct()
     {
         $this->repairs = new ArrayCollection();
@@ -194,6 +197,18 @@ class EquipmentItem
                 $notification->setEquipmentItem(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
 
         return $this;
     }
