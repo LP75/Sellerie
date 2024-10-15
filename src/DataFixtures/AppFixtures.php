@@ -101,8 +101,14 @@ class AppFixtures extends Fixture
             "Selles de Voltige",
             "Selles de Course"];
 
+        $marques = [];
+        for ($i = 0; $i < 10; $i++) {
+            $marques[] = $faker->word;
+        }
+
+
         foreach ($types as $type) {
-            for ($i = 0; $i < mt_rand(1,3); $i++) {
+            for ($i = 0; $i < mt_rand(1,8); $i++) {
 
                 //Création du stock pour ce type d'équipement
                 $stock = new Stock();
@@ -117,7 +123,7 @@ class AppFixtures extends Fixture
                     ->setDescription($faker->paragraph)
                     ->setCategory($faker->randomElement($categoryEntities))
                     ->setUnitPrice($faker->numberBetween(1, 100))
-                    ->setBrand('Marque ' . ($i + 1))
+                    ->setBrand($faker->randomElement($marques))
                     ->setStock($stock);
                 
                 $manager->persist($equipmentType);

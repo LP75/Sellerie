@@ -5,8 +5,8 @@
 {% block body %}
     <h1>Bienvenue sur notre site</h1>
     <ul>
-        {% for equipmentItem in equipmentItems %}
-            <li>{{ equipmentItem.name }}</li>
+        {% for equipmentType in equipmentTypes %}
+            <li>{{ equipmentType.name }}</li>
         {% endfor %}
     </ul>
 {% endblock %}
