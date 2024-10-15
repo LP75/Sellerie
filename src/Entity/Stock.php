@@ -22,7 +22,7 @@ class Stock
     #[ORM\Column]
     private ?int $minimum_stock_level = null;
 
-    #[ORM\OneToOne(mappedBy: 'stock_id', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'stock', cascade: ['persist', 'remove'])]
     private ?EquipmentType $equipmentType = null;
 
     public function getId(): ?int
@@ -74,8 +74,8 @@ class Stock
     public function setEquipmentType(EquipmentType $equipmentType): static
     {
         // set the owning side of the relation if necessary
-        if ($equipmentType->getStockId() !== $this) {
-            $equipmentType->setStockId($this);
+        if ($equipmentType->getStock() !== $this) {
+            $equipmentType->setStock($this);
         }
 
         $this->equipmentType = $equipmentType;

@@ -21,7 +21,7 @@ class Category
     /**
      * @var Collection<int, EquipmentType>
      */
-    #[ORM\OneToMany(targetEntity: EquipmentType::class, mappedBy: 'category_id')]
+    #[ORM\OneToMany(targetEntity: EquipmentType::class, mappedBy: 'category')]
     private Collection $equipmentTypes;
 
     public function __construct()
@@ -58,7 +58,7 @@ class Category
     {
         if (!$this->equipmentTypes->contains($equipmentType)) {
             $this->equipmentTypes->add($equipmentType);
-            $equipmentType->setCategoryId($this);
+            $equipmentType->setCategory($this);
         }
 
         return $this;
@@ -68,8 +68,8 @@ class Category
     {
         if ($this->equipmentTypes->removeElement($equipmentType)) {
             // set the owning side to null (unless already changed)
-            if ($equipmentType->getCategoryId() === $this) {
-                $equipmentType->setCategoryId(null);
+            if ($equipmentType->getCategory() === $this) {
+                $equipmentType->setCategory(null);
             }
         }
 

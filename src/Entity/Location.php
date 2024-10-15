@@ -24,7 +24,7 @@ class Location
     /**
      * @var Collection<int, EquipmentItem>
      */
-    #[ORM\OneToMany(targetEntity: EquipmentItem::class, mappedBy: 'location_id')]
+    #[ORM\OneToMany(targetEntity: EquipmentItem::class, mappedBy: 'location')]
     private Collection $equipmentItems;
 
     public function __construct()
@@ -73,7 +73,7 @@ class Location
     {
         if (!$this->equipmentItems->contains($equipmentItem)) {
             $this->equipmentItems->add($equipmentItem);
-            $equipmentItem->setLocationId($this);
+            $equipmentItem->setLocation($this);
         }
 
         return $this;
@@ -83,8 +83,8 @@ class Location
     {
         if ($this->equipmentItems->removeElement($equipmentItem)) {
             // set the owning side to null (unless already changed)
-            if ($equipmentItem->getLocationId() === $this) {
-                $equipmentItem->setLocationId(null);
+            if ($equipmentItem->getLocation() === $this) {
+                $equipmentItem->setLocation(null);
             }
         }
 

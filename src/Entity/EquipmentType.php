@@ -23,7 +23,7 @@ class EquipmentType
 
     #[ORM\ManyToOne(inversedBy: 'equipmentTypes')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Category $category_id = null;
+    private ?Category $category = null;
 
     #[ORM\Column(length: 255)]
     private ?string $brand = null;
@@ -33,12 +33,12 @@ class EquipmentType
 
     #[ORM\OneToOne(inversedBy: 'equipmentType', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Stock $stock_id = null;
+    private ?Stock $stock = null;
 
     /**
      * @var Collection<int, EquipmentItem>
      */
-    #[ORM\OneToMany(targetEntity: EquipmentItem::class, mappedBy: 'equipmentType_id')]
+    #[ORM\OneToMany(targetEntity: EquipmentItem::class, mappedBy: 'equipmentType')]
     private Collection $equipmentItems;
 
     public function __construct()
@@ -75,14 +75,14 @@ class EquipmentType
         return $this;
     }
 
-    public function getCategoryId(): ?Category
+    public function getCategory(): ?Category
     {
-        return $this->category_id;
+        return $this->category;
     }
 
-    public function setCategoryId(?Category $category_id): static
+    public function setCategory(?Category $category): static
     {
-        $this->category_id = $category_id;
+        $this->category = $category;
 
         return $this;
     }
@@ -111,14 +111,14 @@ class EquipmentType
         return $this;
     }
 
-    public function getStockId(): ?Stock
+    public function getStock(): ?Stock
     {
-        return $this->stock_id;
+        return $this->stock;
     }
 
-    public function setStockId(Stock $stock_id): static
+    public function setStock(Stock $stock): static
     {
-        $this->stock_id = $stock_id;
+        $this->stock = $stock;
 
         return $this;
     }
