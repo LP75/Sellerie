@@ -42,10 +42,17 @@ class EquipmentItem
     #[ORM\OneToMany(targetEntity: Loan::class, mappedBy: 'EquipmentItem')]
     private Collection $loans;
 
+    /**
+     * @var Collection<int, Notification>
+     */
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'equipmentItem')]
+    private Collection $notifications;
+
     public function __construct()
     {
         $this->repairs = new ArrayCollection();
         $this->loans = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -155,6 +162,36 @@ class EquipmentItem
             // set the owning side to null (unless already changed)
             if ($loan->getEquipmentItem() === $this) {
                 $loan->setEquipmentItem(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): static
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setEquipmentItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getEquipmentItem() === $this) {
+                $notification->setEquipmentItem(null);
             }
         }
 
