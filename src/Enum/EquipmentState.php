@@ -9,4 +9,5 @@ enum EquipmentState: string
     case USE = 'use';
     case EN_REPARATION = 'en_reparation';
     case HORS_SERVICE = 'hors_service';
+    case EN_LOCATION = 'en_location';
 }

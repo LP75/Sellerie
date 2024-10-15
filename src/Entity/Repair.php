@@ -26,14 +26,17 @@ class Repair
     #[ORM\Column]
     private ?float $cost = null;
 
-    #[ORM\Column]
-    private ?\DateInterval $repairTime = null;
-
     /**
      * @var Collection<int, Movement>
      */
     #[ORM\OneToMany(targetEntity: Movement::class, mappedBy: 'repair')]
     private Collection $movements;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $date_arrival = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $date_return = null;
 
     public function __construct()
     {
@@ -81,18 +84,6 @@ class Repair
         return $this;
     }
 
-    public function getRepairTime(): ?\DateInterval
-    {
-        return $this->repairTime;
-    }
-
-    public function setRepairTime(\DateInterval $repairTime): static
-    {
-        $this->repairTime = $repairTime;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Movement>
      */
@@ -119,6 +110,30 @@ class Repair
                 $movement->setRepair(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDateArrival(): ?\DateTimeInterface
+    {
+        return $this->date_arrival;
+    }
+
+    public function setDateArrival(\DateTimeInterface $date_arrival): static
+    {
+        $this->date_arrival = $date_arrival;
+
+        return $this;
+    }
+
+    public function getDateReturn(): ?\DateTimeInterface
+    {
+        return $this->date_return;
+    }
+
+    public function setDateReturn(\DateTimeInterface $date_return): static
+    {
+        $this->date_return = $date_return;
 
         return $this;
     }

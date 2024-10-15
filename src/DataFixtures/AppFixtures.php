@@ -5,13 +5,19 @@ namespace App\DataFixtures;
 use App\Entity\Category;
 use App\Entity\EquipmentItem;
 use App\Entity\EquipmentType;
+use App\Entity\Loan;
 use App\Entity\Location;
+use App\Entity\Movement;
+use App\Entity\Notification;
+use App\Entity\Repair;
 use App\Entity\Stock;
 use App\Entity\User;
 use App\Enum\EquipmentState;
+use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
+use DateInterval;
 
 class AppFixtures extends Fixture
 {
@@ -122,6 +128,7 @@ class AppFixtures extends Fixture
         //Création des items d'équipements
         $equipmentTypes = $manager->getRepository(EquipmentType::class)->findAll();
 
+        $equipmentItems = [];
         for ($i = 0; $i < count($equipmentTypes); $i++) {
             $stock = $equipmentTypes[$i]->getStock();
             $quantity = $stock->getQuantity();
@@ -132,8 +139,10 @@ class AppFixtures extends Fixture
                     ->setLocation($faker->randomElement($locationEntities))
                     ->setStatus($this->getWeightedRandomStatus());
                 $manager->persist($equipmentItem);
+                $equipmentItems[] = $equipmentItem;
             }
         }
+        $manager->flush();
 
         // Création des utilisateurs
         // Ajout d'un utilisateur ADMIN prédéfini
@@ -155,6 +164,7 @@ class AppFixtures extends Fixture
         $manager->persist($regularUser);
 
         // Création des utilisateurs aléatoires
+        $users = [];
         for ($i = 0; $i < 10; $i++) {
             $user = new User();
             $user
@@ -163,8 +173,92 @@ class AppFixtures extends Fixture
                 ->setPassword($faker->password)
                 ->setRole($faker->randomElement(['ADMIN', 'USER']));
             $manager->persist($user);
+            //Récupération des utilisateurs USER
+            if ($user->getRole() === 'USER') {
+                $users[] = $user;
+            }
+        }
+        $manager->flush();
+
+        //Création des emprunts (loan)
+        foreach ($equipmentItems as $equipmentItem) {
+            if ($equipmentItem->getStatus() === EquipmentState::EN_LOCATION) {
+                $loan = new Loan();
+                $loan
+                    ->setEquipmentItem($equipmentItem)
+                    ->setUser($faker->randomElement($users))
+                    ->setDateLoaned($faker->dateTimeBetween('-3 month', 'now'))
+                    ->setDateDue($faker->dateTimeBetween('-1 week', '+1 month'));
+                $manager->persist($loan);
+            }
         }
 
+
+        //Création des réparations (repair)
+        foreach ($equipmentItems as $equipmentItem) {
+            if ($equipmentItem->getStatus() === EquipmentState::EN_REPARATION) {
+                $repair = new Repair();
+                $repair
+                    ->setEquipmentItem($equipmentItem)
+                    ->setCost($faker->numberBetween(1, 100))
+                    ->setDateArrival($faker->dateTimeBetween('-3 week', 'now'))
+                    ->setDateReturn($faker->dateTimeBetween('now', '+1 month'));
+                $manager->persist($repair);
+            }
+        }
+
+        $manager->flush();
+
+        // Création des notifications
+        foreach ($equipmentItems as $equipmentItem) {
+            if ($equipmentItem->getStatus() === EquipmentState::HORS_SERVICE) {
+                $notification = new Notification();
+                $notification
+                    ->setEquipmentItem($equipmentItem)
+                    ->setType('HORS_SERVICE')
+                    ->setMessage('L\'équipement est hors service')
+                    ->setDate(new \DateTime($faker->date('Y-m-d', 'now')));
+                $manager->persist($notification);
+            } elseif ($equipmentItem->getStatus() === EquipmentState::EN_LOCATION) {
+                // Récupérer le prêt associé à cet équipement
+                $loan = $manager->getRepository(Loan::class)->findOneBy(['EquipmentItem' => $equipmentItem]);
+                
+                if ($loan) {
+                    //Notification si la location est en retard
+                    if ($loan->getDateDue() < new \DateTime()) {
+                        $notification = new Notification();
+                        $notification
+                            ->setEquipmentItem($equipmentItem)
+                            ->setType('RETARD')
+                            ->setMessage('L\'équipement est en retard')
+                            ->setDate($loan->getDateDue())
+                            ->setUser($loan->getUser());
+                        $manager->persist($notification);
+                    }
+                }
+            }
+        }
+
+        //Création des mouvements (movement)
+        foreach ($equipmentItems as $equipmentItem) {
+            if ($equipmentItem->getStatus() === EquipmentState::EN_REPARATION) {
+                $movement = new Movement();
+                $repair = $manager->getRepository(Repair::class)->findOneBy(['EquipmentItem' => $equipmentItem]);
+                $movement
+                    ->setType('ENVOI_REPARATION')
+                    ->setDate($repair->getDateArrival())
+                    ->setRepair($repair);
+                $manager->persist($movement);
+            } elseif ($equipmentItem->getStatus() === EquipmentState::EN_LOCATION) {
+                $movement = new Movement();
+                $loan = $manager->getRepository(Loan::class)->findOneBy(['EquipmentItem' => $equipmentItem]);
+                $movement
+                    ->setType('ENVOI_LOCATION')
+                    ->setDate($loan->getDateLoaned())
+                    ->setLoan($loan);
+                $manager->persist($movement);
+            }
+        }
         $manager->flush();
     }
 
@@ -173,14 +267,17 @@ class AppFixtures extends Fixture
         $random = mt_rand(1, 100);
         if ($random <= 70) {
             return EquipmentState::NEUF;
-        } elseif ($random <= 80) {
+        } elseif ($random <= 65) {
             return EquipmentState::BON_ETAT;
-        } elseif ($random <= 90) {
+        } elseif ($random <= 75) {
             return EquipmentState::USE;
-        } elseif ($random <= 95) {
+        } elseif ($random <= 85) {
             return EquipmentState::EN_REPARATION;
+        } elseif ($random <= 95) {
+            return EquipmentState::EN_LOCATION;
         } else {
             return EquipmentState::HORS_SERVICE;
         }
     }
+
 }
