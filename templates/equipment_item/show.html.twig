@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}EquipmentItem{% endblock %}
+
+{% block body %}
+    <h1>EquipmentItem</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ equipment_item.id }}</td>
+            </tr>
+            <tr>
+                <th>State</th>
+                <td>{{ equipment_item.state.value }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_equipment_item_index') }}">back to list</a>
+
+    <a href="{{ path('app_equipment_item_edit', {'id': equipment_item.id}) }}">edit</a>
+
+    {{ include('equipment_item/_delete_form.html.twig') }}
+{% endblock %}

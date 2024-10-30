@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\EquipmentItem;
 use Doctrine\ORM\EntityManagerInterface;
 use Proxies\__CG__\App\Entity\EquipmentType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

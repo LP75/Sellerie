@@ -2,11 +2,17 @@
 
 {% block title %}Bienvenue{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    
+{% endblock %}
+
 {% block body %}
-    <h1>Bienvenue sur notre site</h1>
-    <ul>
-        {% for equipmentType in equipmentTypes %}
-            <li>{{ equipmentType.name }}</li>
-        {% endfor %}
-    </ul>
+    <h1>Nos produits</h1>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
 {% endblock %}

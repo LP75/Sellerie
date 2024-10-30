@@ -81,12 +81,12 @@ class EquipmentItem
         return $this;
     }
 
-    public function getStatus(): ?EquipmentState
+    public function getState(): ?EquipmentState
     {
         return $this->state;
     }
 
-    public function setStatus(EquipmentState $state): static
+    public function setState(?EquipmentState $state): static
     {
         $this->state = $state;
 

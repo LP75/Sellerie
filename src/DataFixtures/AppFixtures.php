@@ -65,41 +65,43 @@ class AppFixtures extends Fixture
 
         //Création des types d'équipements
         $types = [
-            "Selles de Dressage",
-            "Selles de Saut",
-            "Selles Western",
-            "Selles de Randonnée",
-            "Bridons",
+            "Selle de Dressage",
+            "Selle de Saut",
+            "Selle Western",
+            "Selle de Randonnée",
+            "Bridon",
             "Mors",
-            "Rênes",
-            "Frontalières",
-            "Étriers",
-            "Sangles",
+            "Rêne",
+            "Frontalière",
+            "Étrier",
+            "Sangle",
             "Tapis de Selle",
-            "Protège-selles",
-            "Produits de Toilettage",
-            "Brosses",
-            "Démêlants",
-            "Garnitures de Secours",
-            "Bandes de Transport",
-            "Couvertures de Transport",
-            "Filets de Transport",
-            "Harnachements Complet",
-            "Systèmes de Charge",
-            "Systèmes de Harnais",
-            "Vêtements de Compétition",
-            "Gants de Cheval",
-            "Chapeaux et Casques",
-            "Bottes de Cheval",
-            "Protecteurs de Chevaux",
-            "Bandes de Protection",
-            "Gilets de Sécurité",
+            "Protège-selle",
+            "Produit de Toilettage",
+            "Brosse",
+            "Démêlant",
+            "Garniture de Secours",
+            "Bande de Transport",
+            "Couverture de Transport",
+            "Filet de Transport",
+            "Harnachement Complet",
+            "Système de Charge",
+            "Système de Harnais",
+            "Vêtement de Compétition",
+            "Gant de Cheval",
+            "Chapeau et Casque",
+            "Botte de Cheval",
+            "Protecteur de Cheval",
+            "Bande de Protection",
+            "Gilet de Sécurité",
             "Alimentation Équilibrée",
-            "Suppléments Nutritionnels",
-            "Produits de Hydratation",
-            "Selles de Polo",
-            "Selles de Voltige",
-            "Selles de Course"];
+            "Supplément Nutritionnel",
+            "Produit de Hydratation",
+            "Selle de Polo",
+            "Selle de Voltige",
+            "Selle de Course"
+        ];
+        
 
         $marques = [];
         for ($i = 0; $i < 10; $i++) {
@@ -143,7 +145,7 @@ class AppFixtures extends Fixture
                 $equipmentItem
                     ->setEquipmentType($faker->randomElement($equipmentTypes))
                     ->setLocation($faker->randomElement($locationEntities))
-                    ->setStatus($this->getWeightedRandomStatus());
+                    ->setState($this->getWeightedRandomStatus());
                 $manager->persist($equipmentItem);
                 $equipmentItems[] = $equipmentItem;
             }
@@ -188,7 +190,7 @@ class AppFixtures extends Fixture
 
         //Création des emprunts (loan)
         foreach ($equipmentItems as $equipmentItem) {
-            if ($equipmentItem->getStatus() === EquipmentState::EN_LOCATION) {
+            if ($equipmentItem->getState() === EquipmentState::EN_LOCATION) {
                 $loan = new Loan();
                 $loan
                     ->setEquipmentItem($equipmentItem)
@@ -202,7 +204,7 @@ class AppFixtures extends Fixture
 
         //Création des réparations (repair)
         foreach ($equipmentItems as $equipmentItem) {
-            if ($equipmentItem->getStatus() === EquipmentState::EN_REPARATION) {
+            if ($equipmentItem->getState() === EquipmentState::EN_REPARATION) {
                 $repair = new Repair();
                 $repair
                     ->setEquipmentItem($equipmentItem)
@@ -217,7 +219,7 @@ class AppFixtures extends Fixture
 
         // Création des notifications
         foreach ($equipmentItems as $equipmentItem) {
-            if ($equipmentItem->getStatus() === EquipmentState::HORS_SERVICE) {
+            if ($equipmentItem->getState() === EquipmentState::HORS_SERVICE) {
                 $notification = new Notification();
                 $notification
                     ->setEquipmentItem($equipmentItem)
@@ -225,7 +227,7 @@ class AppFixtures extends Fixture
                     ->setMessage('L\'équipement est hors service')
                     ->setDate(new \DateTime($faker->date('Y-m-d', 'now')));
                 $manager->persist($notification);
-            } elseif ($equipmentItem->getStatus() === EquipmentState::EN_LOCATION) {
+            } elseif ($equipmentItem->getState() === EquipmentState::EN_LOCATION) {
                 // Récupérer le prêt associé à cet équipement
                 $loan = $manager->getRepository(Loan::class)->findOneBy(['EquipmentItem' => $equipmentItem]);
                 
@@ -247,7 +249,7 @@ class AppFixtures extends Fixture
 
         //Création des mouvements (movement)
         foreach ($equipmentItems as $equipmentItem) {
-            if ($equipmentItem->getStatus() === EquipmentState::EN_REPARATION) {
+            if ($equipmentItem->getState() === EquipmentState::EN_REPARATION) {
                 $movement = new Movement();
                 $repair = $manager->getRepository(Repair::class)->findOneBy(['EquipmentItem' => $equipmentItem]);
                 $movement
@@ -255,7 +257,7 @@ class AppFixtures extends Fixture
                     ->setDate($repair->getDateArrival())
                     ->setRepair($repair);
                 $manager->persist($movement);
-            } elseif ($equipmentItem->getStatus() === EquipmentState::EN_LOCATION) {
+            } elseif ($equipmentItem->getState() === EquipmentState::EN_LOCATION) {
                 $movement = new Movement();
                 $loan = $manager->getRepository(Loan::class)->findOneBy(['EquipmentItem' => $equipmentItem]);
                 $movement
