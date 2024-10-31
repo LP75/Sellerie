@@ -159,7 +159,7 @@ class AppFixtures extends Fixture
             ->setName('admin')
             ->setEmail('admin@admin.com')
             ->setPassword('admin')
-            ->setRole('ADMIN');
+            ->setRoles(['ROLE_ADMIN']);
         $manager->persist($adminUser);
 
         // Ajout d'un utilisateur USER prédéfini
@@ -168,7 +168,7 @@ class AppFixtures extends Fixture
             ->setName('user')
             ->setEmail('user@user.com')
             ->setPassword('user')
-            ->setRole('USER');
+            ->setRoles(['ROLE_USER']);
         $manager->persist($regularUser);
 
         // Création des utilisateurs aléatoires
@@ -179,13 +179,14 @@ class AppFixtures extends Fixture
                 ->setName($faker->name)
                 ->setEmail($faker->email)
                 ->setPassword($faker->password)
-                ->setRole($faker->randomElement(['ADMIN', 'USER']));
+                ->setRoles([$faker->randomElement(['ROLE_ADMIN', 'ROLE_USER'])]);
             $manager->persist($user);
-            //Récupération des utilisateurs USER
-            if ($user->getRole() === 'USER') {
+
+            if (in_array('ROLE_USER', $user->getRoles(), true)) {
                 $users[] = $user;
             }
         }
+
         $manager->flush();
 
         //Création des emprunts (loan)
