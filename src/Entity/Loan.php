@@ -16,7 +16,7 @@ class Loan
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'Loan')]
+    #[ORM\ManyToOne(inversedBy: 'loans')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 

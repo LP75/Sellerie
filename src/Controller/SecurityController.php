@@ -18,6 +18,17 @@ class SecurityController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
+        // redirection si connecté
+        if ($this->getUser()) {
+            $roles = $this->getUser()->getRoles();
+
+            if (in_array('ROLE_ADMIN', $roles, true)) {
+                return $this->redirectToRoute('app_equipment_item_index');
+            } else {
+                return $this->redirectToRoute('app_equipment_item_index');
+            }
+        }
+
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
@@ -29,4 +40,5 @@ class SecurityController extends AbstractController
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
+    
 }

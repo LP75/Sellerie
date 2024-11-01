@@ -18,9 +18,17 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use DateInterval;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+    private $userPasswordHasher;
+
+    public function __construct(UserPasswordHasherInterface $userPasswordHasher)
+    {
+        $this->userPasswordHasher = $userPasswordHasher;
+    }
+
     public function load(ObjectManager $manager)
     {
         $faker = Factory::create('fr_FR'); // Crée une instance de Faker avec les paramètres régionaux français
@@ -158,7 +166,7 @@ class AppFixtures extends Fixture
         $adminUser
             ->setName('admin')
             ->setEmail('admin@admin.com')
-            ->setPassword('admin')
+            ->setPassword($this->userPasswordHasher->hashPassword($adminUser, 'admin'))
             ->setRoles(['ROLE_ADMIN']);
         $manager->persist($adminUser);
 
@@ -167,7 +175,7 @@ class AppFixtures extends Fixture
         $regularUser
             ->setName('user')
             ->setEmail('user@user.com')
-            ->setPassword('user')
+            ->setPassword($this->userPasswordHasher->hashPassword($adminUser, 'user'))
             ->setRoles(['ROLE_USER']);
         $manager->persist($regularUser);
 
@@ -178,7 +186,7 @@ class AppFixtures extends Fixture
             $user
                 ->setName($faker->name)
                 ->setEmail($faker->email)
-                ->setPassword($faker->password)
+                ->setPassword($this->userPasswordHasher->hashPassword($user, $faker->password))
                 ->setRoles([$faker->randomElement(['ROLE_ADMIN', 'ROLE_USER'])]);
             $manager->persist($user);
 
