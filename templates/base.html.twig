@@ -8,8 +8,8 @@
         {% endblock %}
     </head>
     <body>
-        {% if app.request.get('_route') != 'app_login' %}
-            {% include 'menu.html.twig' %}
+        {% if app.request.get('_route') != 'app_login' and app.request.get('_route') != 'app_register' %}
+            {{ render(controller('App\\Controller\\MenuController::index')) }}
         {% endif %}
         
         {% block body %}{% endblock %}
