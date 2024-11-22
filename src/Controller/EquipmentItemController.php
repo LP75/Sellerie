@@ -3,26 +3,40 @@
 namespace App\Controller;
 
 use App\Entity\EquipmentItem;
+use App\Entity\Loan;
 use App\Form\EquipmentItemType;
+use App\Form\LoanType;
 use App\Repository\EquipmentItemRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/equipment')]
 final class EquipmentItemController extends AbstractController
 {
+    private $requestStack;
+
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->requestStack = $requestStack;
+    }
+
     #[Route(name: 'app_equipment_item_index', methods: ['GET'])]
     public function index(EquipmentItemRepository $equipmentItemRepository): Response
     {
-        return $this->render('equipment_item/index.html.twig', [
+        $session = $this->requestStack->getSession();
+        $userRole = $session->get('user_role', 'visitor');
+
+        return $this->render('equipment_item/index3.html.twig', [
             'equipment_items' => $equipmentItemRepository->findAll(),
+            'user_role' => $userRole,
         ]);
     }
 
-    #[Route('/new', name: 'app_equipment_item_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'app_equipment_item_new', methods: ['POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $equipmentItem = new EquipmentItem();
@@ -42,7 +56,7 @@ final class EquipmentItemController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_equipment_item_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_equipment_item_show', methods: ['POST'])]
     public function show(EquipmentItem $equipmentItem): Response
     {
         return $this->render('equipment_item/show.html.twig', [
@@ -50,7 +64,7 @@ final class EquipmentItemController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_equipment_item_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_equipment_item_edit', methods: ['POST'])]
     public function edit(Request $request, EquipmentItem $equipmentItem, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(EquipmentItemType::class, $equipmentItem);
@@ -77,5 +91,30 @@ final class EquipmentItemController extends AbstractController
         }
 
         return $this->redirectToRoute('app_equipment_item_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/loan', name: 'app_equipment_item_loan', methods: ['POST'])]
+    public function loan(Request $request, EquipmentItem $equipmentItem, EntityManagerInterface $entityManager): Response
+    {
+        $loan = new Loan();
+        $loan->setEquipmentItem($equipmentItem);
+        $form = $this->createForm(LoanType::class, $loan);
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($this->isCsrfTokenValid('loan'.$equipmentItem->getId(), $request->request->get('_token'))) {
+                $entityManager->persist($loan);
+                $entityManager->flush();
+    
+                return $this->redirectToRoute('app_equipment_item_index', [], Response::HTTP_SEE_OTHER);
+            } else {
+                throw $this->createAccessDeniedException('Invalid CSRF token.');
+            }
+        }
+    
+        return $this->render('equipment_item/loan.html.twig', [
+            'equipment_item' => $equipmentItem,
+            'form' => $form,
+        ]);
     }
 }

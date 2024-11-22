@@ -111,10 +111,18 @@ class AppFixtures extends Fixture
         ];
         
 
-        $marques = [];
-        for ($i = 0; $i < 10; $i++) {
-            $marques[] = $faker->word;
-        }
+        $marques = [
+            "Cuir et Crinière",
+            "Harnache & Co",
+            "Équilibri'Art",
+            "Galop Noble",
+            "Cavalina",
+            "Artisan Cavalier",
+            "Dressage d'Or",
+            "ÉquiSens",
+            "Sellier du Vent",
+            "Prestige Équestre"
+        ];
 
 
         foreach ($types as $type) {

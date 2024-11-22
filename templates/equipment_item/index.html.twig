@@ -1,27 +1,51 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}EquipmentItem index{% endblock %}
+{% block title %}Équipement{% endblock %}
 
 {% block body %}
-    <h1>EquipmentItem index</h1>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>State</th>
-                <th>actions</th>
+                <th>Équipement</th>
+                <th>Catégorie</th>
+                <th>Marque</th>
+                <th>Description</th>
+                <th>Prix</th>
+            {% if user_role == 'admin' %}
+                <th>Actions</th>
+            {% elseif user_role == 'user' %}
+                <th>Location</th>
+            {% endif %}
             </tr>
         </thead>
         <tbody>
         {% for item in equipment_items %}
             <tr>
                 <td>{{ item.equipmentType.name }}</td>
-                <td>{{ item.state.value }}</td>
+                <td>{{ item.equipmentType.category.name }}</td>
+                <td>{{ item.equipmentType.brand }}</td>
+                <td>{{ item.equipmentType.description }}</td>
+                <td>{{ item.equipmentType.unitPrice }}</td>
+                {% if user_role == 'admin' %}
                 <td>
-                    <a href="{{ path('app_equipment_item_show', {'id': item.id}) }}">show</a>
-                    <a href="{{ path('app_equipment_item_edit', {'id': item.id}) }}">edit</a>
+                    <form action="{{ path('app_equipment_item_show', {'id': item.id}) }}" method="post" style="display:inline;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('show' ~ item.id) }}">
+                        <button type="submit" class="btn btn-link p-0 m-0 align-baseline">show</button>
+                    </form>
+                    <form action="{{ path('app_equipment_item_edit', {'id': item.id}) }}" method="post" style="display:inline;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('edit' ~ item.id) }}">
+                        <button type="submit" class="btn btn-link p-0 m-0 align-baseline">edit</button>
+                    </form>
                 </td>
+                {% elseif user_role == 'user' %}
+                <td>
+                    <form action="{{ path('app_equipment_item_loan', {'id': item.id}) }}" method="post" style="display:inline;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('loan' ~ item.id) }}">
+                        <button type="submit" class="btn btn-link p-0 m-0 align-baseline">Louer</button>
+                    </form>
+                </td>
+                {% endif %}
             </tr>
         {% else %}
             <tr>

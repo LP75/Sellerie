@@ -7,4 +7,7 @@
 import './styles/app.css';
 import 'flowbite';
 
+// assets/js/app.js
+import './js/equipmentIndex.js';
+
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');

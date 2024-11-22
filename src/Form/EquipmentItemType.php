@@ -9,13 +9,27 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use App\Enum\EquipmentState;
 
 class EquipmentItemType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('state')
+            ->add('state', ChoiceType::class, [
+                'choices' => [
+                    'Neuf' => EquipmentState::NEUF,
+                    'Bon état' => EquipmentState::BON_ETAT,
+                    'Usé' => EquipmentState::USE,
+                    'En réparation' => EquipmentState::EN_REPARATION,
+                    'Hors service' => EquipmentState::HORS_SERVICE,
+                    'En location' => EquipmentState::EN_LOCATION,
+                ],
+                'choice_label' => function ($choice, $key, $value) {
+                    return $choice->getState();
+                },
+            ])
             ->add('equipmentType', EntityType::class, [
                 'class' => EquipmentType::class,
                 'choice_label' => 'id',
