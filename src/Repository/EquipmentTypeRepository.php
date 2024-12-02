@@ -16,6 +16,22 @@ class EquipmentTypeRepository extends ServiceEntityRepository
         parent::__construct($registry, EquipmentType::class);
     }
 
+    public function findUniqueBrands(): array
+{
+    $qb = $this->createQueryBuilder('e')
+        ->select('DISTINCT e.brand')
+        ->orderBy('e.brand', 'ASC');
+
+    $results = $qb->getQuery()->getResult();
+
+    $brands = [];
+    foreach ($results as $result) {
+        $brands[] = $result['brand'];
+    }
+
+    return $brands;
+}
+
     //    /**
     //     * @return EquipmentType[] Returns an array of EquipmentType objects
     //     */

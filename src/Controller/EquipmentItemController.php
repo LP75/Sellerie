@@ -6,7 +6,9 @@ use App\Entity\EquipmentItem;
 use App\Entity\Loan;
 use App\Form\EquipmentItemType;
 use App\Form\LoanType;
+use App\Repository\CategoryRepository;
 use App\Repository\EquipmentItemRepository;
+use App\Repository\EquipmentTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,14 +27,16 @@ final class EquipmentItemController extends AbstractController
     }
 
     #[Route(name: 'app_equipment_item_index', methods: ['GET'])]
-    public function index(EquipmentItemRepository $equipmentItemRepository): Response
+    public function index(EquipmentItemRepository $equipmentItemRepository, EquipmentTypeRepository $equipmentTypeRepository, CategoryRepository $categoryRepository): Response
     {
         $session = $this->requestStack->getSession();
         $userRole = $session->get('user_role', 'visitor');
 
-        return $this->render('equipment_item/index3.html.twig', [
+        return $this->render('equipment_item/index.html.twig', [
             'equipment_items' => $equipmentItemRepository->findAll(),
             'user_role' => $userRole,
+            'unique_brands' => $equipmentTypeRepository->findUniqueBrands(),
+            'unique_categories' => $categoryRepository->findAllCategories(),
         ]);
     }
 
