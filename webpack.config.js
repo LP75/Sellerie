@@ -22,7 +22,6 @@ Encore
      */
     .addEntry('app', './assets/app.js')
     .addEntry('equipmentIndex', './assets/js/equipmentIndex.js')
-    .addEntry('equipmentIndexDelete', './assets/js/equipmentIndexDelete.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

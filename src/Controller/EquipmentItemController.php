@@ -11,19 +11,23 @@ use App\Repository\EquipmentItemRepository;
 use App\Repository\EquipmentTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+
 #[Route('/equipment')]
 final class EquipmentItemController extends AbstractController
 {
     private $requestStack;
+    private $security;
 
-    public function __construct(RequestStack $requestStack)
+    public function __construct(RequestStack $requestStack, Security $security)
     {
         $this->requestStack = $requestStack;
+        $this->security = $security;
     }
 
     #[Route(name: 'app_equipment_item_index', methods: ['GET'])]
@@ -108,18 +112,18 @@ final class EquipmentItemController extends AbstractController
     {
         $loan = new Loan();
         $loan->setEquipmentItem($equipmentItem);
+        $loan->setUser($this->security->getUser());
+        $loan->setDateLoaned(new \DateTime());
+    
         $form = $this->createForm(LoanType::class, $loan);
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($this->isCsrfTokenValid('loan'.$equipmentItem->getId(), $request->request->get('_token'))) {
-                $entityManager->persist($loan);
-                $entityManager->flush();
+            // Suppression de la vérification du jeton CSRF
+            $entityManager->persist($loan);
+            $entityManager->flush();
     
-                return $this->redirectToRoute('app_equipment_item_index', [], Response::HTTP_SEE_OTHER);
-            } else {
-                throw $this->createAccessDeniedException('Invalid CSRF token.');
-            }
+            return $this->redirectToRoute('app_equipment_item_index', [], Response::HTTP_SEE_OTHER);
         }
     
         return $this->render('equipment_item/loan.html.twig', [

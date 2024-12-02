@@ -1,12 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Loan Equipment Item{% endblock %}
+{% block title %}Louer un équipement{% endblock %}
 
 {% block body %}
-    <h1>Loan Equipment Item</h1>
 
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <input type="hidden" name="_token" value="{{ csrf_token('loan' ~ equipment_item.id) }}">
-    {{ form_end(form) }}
+    {{ include('equipment_item/_loan_form.html.twig') }}
+
 {% endblock %}

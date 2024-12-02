@@ -106,7 +106,7 @@
                         <td class="px-4 py-3">{{ item.equipmentType.description }}</td>
                         <td class="px-4 py-3">{{ item.equipmentType.unitPrice }}</td>
                         {% if user_role == 'admin' %}
-                        <td class="px-4 py-3 flex flex-col items-center justify-end space-y-2"> 
+                        <td class="px-4 py-3"> 
                             <form action="{{ path('app_equipment_item_edit', {'id': item.id}) }}" method="post" style="display:inline;">
                                 <input type="hidden" name="_token" value="{{ csrf_token('edit' ~ item.id) }}">
                                 <button type="submit" class="flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100">Editer</button>
@@ -117,7 +117,7 @@
                             </form>
                         </td>
                         {% elseif user_role == 'user' %}
-                        <td class="px-4 py-3 flex items-center justify-end">
+                        <td class="px-4 py-3">
                             <form action="{{ path('app_equipment_item_loan', {'id': item.id}) }}" method="post" style="display:inline;">
                                 <input type="hidden" name="_token" value="{{ csrf_token('loan' ~ item.id) }}">
                                 <button type="submit" class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100">Louer</button>
@@ -151,5 +151,4 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('equipmentIndex') }}
-    {{ encore_entry_script_tags('equipmentIndexDelete') }}
 {% endblock %}
