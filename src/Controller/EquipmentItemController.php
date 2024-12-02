@@ -60,13 +60,13 @@ final class EquipmentItemController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_equipment_item_show', methods: ['POST'])]
-    public function show(EquipmentItem $equipmentItem): Response
-    {
-        return $this->render('equipment_item/show.html.twig', [
-            'equipment_item' => $equipmentItem,
-        ]);
-    }
+    // #[Route('/{id}', name: 'app_equipment_item_show', methods: ['POST'])]
+    // public function show(EquipmentItem $equipmentItem): Response
+    // {
+    //     return $this->render('equipment_item/show.html.twig', [
+    //         'equipment_item' => $equipmentItem,
+    //     ]);
+    // }
 
     #[Route('/{id}/edit', name: 'app_equipment_item_edit', methods: ['POST'])]
     public function edit(Request $request, EquipmentItem $equipmentItem, EntityManagerInterface $entityManager): Response
@@ -90,11 +90,15 @@ final class EquipmentItemController extends AbstractController
     public function delete(Request $request, EquipmentItem $equipmentItem, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$equipmentItem->getId(), $request->request->get('_token'))) {
+            // Supprimer les prêts associés
+            $loans = $equipmentItem->getLoans();
+            foreach ($loans as $loan) {
+                $entityManager->remove($loan);
+            }
+    
             $entityManager->remove($equipmentItem);
             $entityManager->flush();
-            dd('deleted');
         }
-        dd('not deleted');
     
         return $this->redirectToRoute('app_equipment_item_index', [], Response::HTTP_SEE_OTHER);
     }
