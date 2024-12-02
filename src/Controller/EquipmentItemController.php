@@ -89,11 +89,13 @@ final class EquipmentItemController extends AbstractController
     #[Route('/{id}', name: 'app_equipment_item_delete', methods: ['POST'])]
     public function delete(Request $request, EquipmentItem $equipmentItem, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$equipmentItem->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$equipmentItem->getId(), $request->request->get('_token'))) {
             $entityManager->remove($equipmentItem);
             $entityManager->flush();
+            dd('deleted');
         }
-
+        dd('not deleted');
+    
         return $this->redirectToRoute('app_equipment_item_index', [], Response::HTTP_SEE_OTHER);
     }
 
