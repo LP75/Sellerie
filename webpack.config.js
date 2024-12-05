@@ -22,6 +22,7 @@ Encore
      */
     .addEntry('app', './assets/app.js')
     .addEntry('equipmentIndex', './assets/js/equipmentIndex.js')
+    .addEntry('toggleDarkMode', './assets/js/toggleDarkMode.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

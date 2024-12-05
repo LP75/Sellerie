@@ -6,6 +6,3 @@
  */
 import './styles/app.css';
 import 'flowbite';
-
-// assets/js/app.js
-import './js/equipmentIndex.js';
