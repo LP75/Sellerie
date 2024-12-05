@@ -48,13 +48,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         paginationButtons.appendChild(createButton(1, 'Première'));
 
-        if (currentPage > 2) {
+        if (currentPage > 1) {
             paginationButtons.appendChild(createButton(currentPage - 1));
         }
 
         paginationButtons.appendChild(createButton(currentPage));
 
-        if (currentPage < pageCount - 1) {
+        if (currentPage < pageCount) {
             paginationButtons.appendChild(createButton(currentPage + 1));
         }
 
