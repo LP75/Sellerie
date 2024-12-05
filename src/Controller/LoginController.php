@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-class SecurityController extends AbstractController
+class LoginController extends AbstractController
 {
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
@@ -29,7 +29,7 @@ class SecurityController extends AbstractController
             }
         }
 
-        return $this->render('security/login.html.twig', [
+        return $this->render('login/index.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
         ]);

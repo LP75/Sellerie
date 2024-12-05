@@ -33,6 +33,7 @@ final class EquipmentItemController extends AbstractController
     #[Route(name: 'app_equipment_item_index', methods: ['GET'])]
     public function index(EquipmentItemRepository $equipmentItemRepository, EquipmentTypeRepository $equipmentTypeRepository, CategoryRepository $categoryRepository): Response
     {
+        
         $session = $this->requestStack->getSession();
         $userRole = $session->get('user_role', 'visitor');
 
@@ -63,14 +64,6 @@ final class EquipmentItemController extends AbstractController
             'form' => $form,
         ]);
     }
-
-    // #[Route('/{id}', name: 'app_equipment_item_show', methods: ['POST'])]
-    // public function show(EquipmentItem $equipmentItem): Response
-    // {
-    //     return $this->render('equipment_item/show.html.twig', [
-    //         'equipment_item' => $equipmentItem,
-    //     ]);
-    // }
 
     #[Route('/{id}/edit', name: 'app_equipment_item_edit', methods: ['POST'])]
     public function edit(Request $request, EquipmentItem $equipmentItem, EntityManagerInterface $entityManager): Response

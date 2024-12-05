@@ -33,6 +33,7 @@ class EquipmentItemType extends AbstractType
                 'row_attr' => [
                     'class' => 'mb-4 sm:mb-5',
                 ],
+                'label' => 'État',
             ])
             ->add('equipmentType', EntityType::class, [
                 'class' => EquipmentType::class,
@@ -45,6 +46,7 @@ class EquipmentItemType extends AbstractType
                 'row_attr' => [
                     'class' => 'mb-4 sm:mb-5',
                 ],
+                'label' => 'Équipement',
             ])
             ->add('location', EntityType::class, [
                 'class' => Location::class,
@@ -55,6 +57,7 @@ class EquipmentItemType extends AbstractType
                 'row_attr' => [
                     'class' => 'mb-4 sm:mb-5',
                 ],
+                'label' => 'Emplacement',
             ])
         ;
     }
