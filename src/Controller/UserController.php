@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Repository\NotificationRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,11 +19,13 @@ final class UserController extends AbstractController
 {
     private $requestStack;
     private $security;
+    private $notificationRepository;
 
-    public function __construct(RequestStack $requestStack, Security $security)
+    public function __construct(RequestStack $requestStack, Security $security, NotificationRepository $notificationRepository)
     {
         $this->requestStack = $requestStack;
         $this->security = $security;
+        $this->notificationRepository = $notificationRepository;
     }
 
     #[Route(name: 'app_user_index', methods: ['GET'])]
@@ -42,11 +45,26 @@ final class UserController extends AbstractController
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+
+            $notifications = $user->getNotifications();
+            foreach ($notifications as $notification) {
+                $entityManager->remove($notification);
+            }
+
+            $loans = $user->getLoans();
+            foreach ($loans as $loan) {
+                $movements = $loan->getMovements();
+                foreach ($movements as $movement) {
+                    $entityManager->remove($movement);
+                }
+                $entityManager->remove($loan);
+            }
+
             $entityManager->remove($user);
             $entityManager->flush();
         }
-
+    
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
 }
