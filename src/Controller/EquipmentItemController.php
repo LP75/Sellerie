@@ -48,6 +48,8 @@ final class EquipmentItemController extends AbstractController
     #[Route('/new', name: 'app_equipment_item_new', methods: ['POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        
         $equipmentItem = new EquipmentItem();
         $form = $this->createForm(EquipmentItemType::class, $equipmentItem);
         $form->handleRequest($request);

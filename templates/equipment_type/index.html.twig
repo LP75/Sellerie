@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}EquipmentType index{% endblock %}
+
+{% block body %}
+    <h1>EquipmentType index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Brand</th>
+                <th>Unit_price</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for equipment_type in equipment_types %}
+            <tr>
+                <td>{{ equipment_type.id }}</td>
+                <td>{{ equipment_type.name }}</td>
+                <td>{{ equipment_type.description }}</td>
+                <td>{{ equipment_type.brand }}</td>
+                <td>{{ equipment_type.unitPrice }}</td>
+                <td>
+                    <a href="{{ path('app_equipment_type_show', {'id': equipment_type.id}) }}">show</a>
+                    <a href="{{ path('app_equipment_type_edit', {'id': equipment_type.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_equipment_type_new') }}">Create new</a>
+{% endblock %}
