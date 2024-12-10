@@ -112,7 +112,7 @@ final class EquipmentItemController extends AbstractController
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
-            // Suppression de la vérification du jeton CSRF
+            
             $entityManager->persist($loan);
             $entityManager->flush();
     
