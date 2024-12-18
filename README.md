@@ -64,7 +64,7 @@ npm run dev
 Utilisez la commande Symfony pour lancer le serveur local :
 
 ```sh
-php bin/console server:run
+symfony server:start
 ```
 
 Votre application sera accessible à l'adresse `http://127.0.0.1:8000`.
