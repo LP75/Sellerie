@@ -30,6 +30,7 @@ final class EquipmentItemController extends AbstractController
         $this->security = $security;
     }
 
+    //Afficher tous les EquipmentItems
     #[Route(name: 'app_equipment_item_index', methods: ['GET'])]
     public function index(EquipmentItemRepository $equipmentItemRepository, EquipmentTypeRepository $equipmentTypeRepository, CategoryRepository $categoryRepository): Response
     {
@@ -45,6 +46,7 @@ final class EquipmentItemController extends AbstractController
         ]);
     }
 
+    //Créer un nouvel EquipmentItem
     #[Route('/new', name: 'app_equipment_item_new', methods: ['POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -67,6 +69,7 @@ final class EquipmentItemController extends AbstractController
         ]);
     }
 
+    //Modifier un EquipmentItem
     #[Route('/{id}/edit', name: 'app_equipment_item_edit', methods: ['POST'])]
     public function edit(Request $request, EquipmentItem $equipmentItem, EntityManagerInterface $entityManager): Response
     {
@@ -85,14 +88,22 @@ final class EquipmentItemController extends AbstractController
         ]);
     }
 
+    //Supprimer un EquipmentItem
     #[Route('/{id}', name: 'app_equipment_item_delete', methods: ['POST'])]
     public function delete(Request $request, EquipmentItem $equipmentItem, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$equipmentItem->getId(), $request->request->get('_token'))) {
+
             // Supprimer les prêts associés
             $loans = $equipmentItem->getLoans();
             foreach ($loans as $loan) {
                 $entityManager->remove($loan);
+
+                // Supprimer les mouvements associés
+                $movements = $loan->getMovements();
+                foreach ($movements as $movement) {
+                    $entityManager->remove($movement);
+                }
             }
     
             $entityManager->remove($equipmentItem);
@@ -102,6 +113,7 @@ final class EquipmentItemController extends AbstractController
         return $this->redirectToRoute('app_equipment_item_index', [], Response::HTTP_SEE_OTHER);
     }
 
+    //Louer un EquipmentItem
     #[Route('/{id}/loan', name: 'app_equipment_item_loan', methods: ['POST'])]
     public function loan(Request $request, EquipmentItem $equipmentItem, EntityManagerInterface $entityManager): Response
     {

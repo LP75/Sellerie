@@ -16,6 +16,7 @@ class MenuController extends AbstractController
         $this->requestStack = $requestStack;
     }
 
+    //Menu
     #[Route('/menu', name: 'app_menu')]
     public function index(): Response
     {

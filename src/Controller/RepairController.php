@@ -8,7 +8,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class RepairController extends AbstractController
-{
+{   
+    //Liste des réparations
     #[Route('/repair', name: 'app_repair')]
     public function index(RepairRepository $repairRepository): Response
     {

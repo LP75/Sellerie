@@ -17,6 +17,7 @@ class HomeController extends AbstractController
         $this->requestStack = $requestStack;
     }
 
+    //Page d'accueil
     #[Route('/', name: 'app_home')]
     public function index(Security $security): Response
     {

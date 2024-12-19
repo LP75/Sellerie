@@ -28,6 +28,7 @@ final class UserController extends AbstractController
         $this->notificationRepository = $notificationRepository;
     }
 
+    //Liste des utilisateurs
     #[Route(name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
@@ -42,6 +43,7 @@ final class UserController extends AbstractController
         ]);
     }
 
+    //Supprimer un utilisateur
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {

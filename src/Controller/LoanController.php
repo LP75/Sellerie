@@ -9,6 +9,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class LoanController extends AbstractController
 {
+    //Liste des prêts
     #[Route('/loan', name: 'app_loan')]
     public function index(LoanRepository $loanRepository): Response
     {
