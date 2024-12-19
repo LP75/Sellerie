@@ -73,14 +73,6 @@ Votre application sera accessible à l'adresse `http://127.0.0.1:8000`.
 
 Ouvrez votre navigateur et accédez à l'adresse `http://127.0.0.1:8000` pour voir votre application en action.
 
-### 9. (Optionnel) Lancer les tests
-
-Pour exécuter les tests, utilisez la commande suivante :
-
-```sh
-php bin/phpunit
-```
-
 ### Résumé des commandes
 
 ```sh
@@ -94,7 +86,7 @@ php bin/console doctrine:migrations:migrate
 php bin/console doctrine:fixtures:load
 npm install
 npm run dev
-php bin/console server:run
+symfony server:start
 ```
 
 En suivant ces étapes, vous devriez être en mesure de configurer et de lancer votre application Symfony en local.
